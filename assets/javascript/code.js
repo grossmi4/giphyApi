@@ -1,13 +1,13 @@
 const apiKey = "Z2ms36QqkedOO3zk3BNdoVBFpm5adrAp";
 const baseUrl = "http://api.giphy.com/v1/gifs/search?";
 const limit = 10;
-let queryUrl = "";
 let topics = ["Jake+Peralta","Captain+Holt","Rosa+Diaz","Gina+Linetti","Terry+Jeffords","Amy+Santiago"];
 
 $(document).ready(function(){
   $("#search").on("click", function(){
     let queryTerm = $("#term").val().trim();
-    createButton(queryTerm);
+    topics.push(queryTerm);
+    createButtons();
     // queryUrl = giphy.queryBuilder(queryTerm);
     // giphy.query(queryUrl);
   })
@@ -16,7 +16,8 @@ $(document).ready(function(){
 const queryBuilder = function(queryTerm) {
   return `${baseUrl}q=${queryTerm}&limit=${limit}&api_key=${apiKey}`
 };
-const query = function(queryUrl) {
+const query = function(queryTerm) {
+  let queryUrl = queryBuilder(queryTerm);
   $.ajax({
     url: queryUrl,
     method: "GET"
@@ -25,8 +26,12 @@ const query = function(queryUrl) {
   })
 };
 
-const createButton = function(queryTerm) {
-  $("#btn-container").append(
-    `<button class="waves-effect waves-light btn green lighten-4">${queryTerm}</button>`
-  )
+const createButtons = function() {
+  $("#btn-container").empty();
+  topics.forEach( ()=>{
+    $("#btn-container").append(
+      `<button class="waves-effect waves-light btn green lighten-2 giphy">${queryTerm}</button>`
+    ).attr("value",queryTerm.replace(" ","+"))
+  });
+  $(document).on("click",".giphy",query())
 };
