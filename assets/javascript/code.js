@@ -15,6 +15,7 @@ $(document).ready(function(){
 const queryBuilder = function(queryTerm) {
   return `${baseUrl}q=${queryTerm}&limit=${limit}&api_key=${apiKey}`
 };
+
 const query = function() {
   let queryTerm = $(this).text().replace(" ","+");
   console.log(queryTerm);
@@ -23,7 +24,12 @@ const query = function() {
     url: queryUrl,
     method: "GET"
   }).then(response =>{
-    console.log(response)
+    console.log(response);
+    response.data.forEach(returned => {
+      console.log(returned.images.fixed_height.url);
+      newGif = $(`<img src="${returned.images.fixed_height}">`);
+      $("#gif-container").append(newGif);
+    })
   })
 };
 
