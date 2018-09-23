@@ -11,7 +11,7 @@ $(document).ready(function(){
   });
   createButtons();
 });
-//if (results[i].rating !== "r" && results[i].rating !== "pg-13")
+
 const queryBuilder = function(queryTerm) {
   return `${baseUrl}q=${queryTerm}&limit=${limit}&api_key=${apiKey}`
 };
@@ -26,9 +26,10 @@ const query = function() {
   }).then(response =>{
     console.log(response);
     response.data.forEach(returned => {
-      console.log(returned.images.fixed_height.url);
-      newGif = $(`<img src="${returned.images.fixed_height}">`);
-      $("#gif-container").append(newGif);
+      if (returned.rating !== "r" && returned.rating !== "pg-13") {
+        newGif = $(`<img src="${returned.images.fixed_height.url}">`);
+        $("#gif-container").prepend(newGif);
+      }
     })
   })
 };
@@ -36,11 +37,9 @@ const query = function() {
 const createButtons = function() {
   $("#btn-container").empty();
   topics.forEach( (term)=>{
-    console.log(term);
-    let newBtn = `<button class="waves-effect waves-light btn green lighten-2 giphy">${term}</button>`
+    let newBtn = `<button class="waves-effect waves-light btn-small green lighten-2 giphy">${term}</button>`
     $(newBtn).attr("data-term",term.replace(" ","+"));
     $("#btn-container").append(newBtn);
-    console.log(newBtn);
   });
   $(document).on("click",".giphy",query)
 };
